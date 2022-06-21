@@ -18,6 +18,7 @@ const showSlide = () => {
             </div>
         </div>
     `
+
     if(slidesShown < slideShowImageURLs.length-1) {
         slidesShown++
     } else {
@@ -33,7 +34,10 @@ document.addEventListener('DOMContentLoaded',() => {
 const chooseImages = (dataJSON) => {
     for(let i=0;i<dataJSON.data.children.length;i++) {
         if(dataJSON.data.children[i].data.url.slice(-3) === 'jpg') {
-            slideShowImageURLs.push(dataJSON.data.children[i].data.url)
+            if(dataJSON.data.children[i].data.is_reddit_media_domain === true) {
+                slideShowImageURLs.push(dataJSON.data.children[i].data.url)
+                console.log(i+":"+dataJSON.data.children[i].data.url)
+            }
         }
     }
 
@@ -46,9 +50,10 @@ document.getElementById('search-button').addEventListener('click', (event) => {
     console.log(userText)
     document.getElementById('search-button').value = 'loading...'
     
-    fetch(`https://www.reddit.com/search.json?q=${userText}+nsfw:no&limit=100`) 
+    fetch(`https://www.reddit.com/r/images/search.json?q=${userText}+nsfw:no&limit=100`) 
         .then((responseData)=> responseData.json())
         .then((jsonData)=>{
+            console.log(jsonData) 
             chooseImages(jsonData)
         })
         .catch((jsonData) => {
