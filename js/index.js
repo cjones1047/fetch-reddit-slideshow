@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded',() => {
 const chooseImages = (dataJSON) => {
     for(let i=0;i<dataJSON.data.children.length;i++) {
         if(dataJSON.data.children[i].data.url.slice(-3) === 'jpg') {
-            if(dataJSON.data.children[i].data.is_reddit_media_domain === true) {
+            if(dataJSON.data.children[i].data.is_reddit_media_domain === true && slideShowImageURLs.find(element => element === dataJSON.data.children[i].data.url) === undefined) {
                 slideShowImageURLs.push(dataJSON.data.children[i].data.url)
                 console.log(i+":"+dataJSON.data.children[i].data.url)
             }
@@ -50,7 +50,7 @@ document.getElementById('search-button').addEventListener('click', (event) => {
     console.log(userText)
     document.getElementById('search-button').value = 'loading...'
     
-    fetch(`https://www.reddit.com/r/images/search.json?q=${userText}+nsfw:no&limit=100`) 
+    fetch(`https://www.reddit.com/r/pics/search.json?q=${userText}+nsfw:no&limit=100`) 
         .then((responseData)=> responseData.json())
         .then((jsonData)=>{
             console.log(jsonData) 
